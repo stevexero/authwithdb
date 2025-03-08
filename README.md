@@ -1,6 +1,6 @@
 # AuthWithDB
 
-[Example](https://authwithdb-gamma.vercel.app)
+<a href="https://authwithdb-gamma.vercel.app" target="_blank">Example</a>
 
 ## Step 1
 
