@@ -19,6 +19,4 @@ export async function loginWithCredentials(formData: FormData): Promise<void> {
   if (!result || result.error) {
     throw new Error('Invalid email or password');
   }
-
-  // No return value; client handles redirect
 }

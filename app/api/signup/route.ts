@@ -5,11 +5,20 @@ import { hash } from 'bcryptjs';
 import { signIn } from '@/auth';
 
 export async function POST(request: NextRequest) {
-  const { name, email, password } = await request.json();
+  const { name, email, password, passwordConfirm } = await request.json();
 
-  if (!name || !email || !password) {
+  if (!name || !email || !password || !passwordConfirm) {
     return NextResponse.json(
-      { error: 'Name, email, and password are required' },
+      {
+        error: 'Name, email, password, and password confirmation are required',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (password !== passwordConfirm) {
+    return NextResponse.json(
+      { error: 'Passwords do not match' },
       { status: 400 }
     );
   }

@@ -15,14 +15,14 @@ export default function Login() {
     const formData = new FormData(e.currentTarget);
     try {
       await loginWithCredentials(formData);
-      window.location.href = '/dashboard'; // Redirect on success
+      window.location.href = '/dashboard';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
   };
 
   return (
-    <div className='max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow'>
+    <div className='max-w-md mx-auto mt-20 p-6 bg-white shadow-2xl shadow-slate-800 rounded-2xl'>
       <h1 className='text-2xl font-bold mb-6'>Login</h1>
       {error && <p className='text-red-500 mb-4'>{error}</p>}
       <form

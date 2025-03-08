@@ -13,13 +13,6 @@ const compare = async (password: string, hash: string) => {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-console.log('Adapter table names:', {
-  users: 'users',
-  accounts: 'accounts',
-  sessions: 'sessions',
-  verificationTokens: 'verificationTokens',
-});
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
     usersTable: schema.users,
@@ -27,7 +20,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     sessionsTable: schema.sessions,
     verificationTokensTable: schema.verificationTokens,
   }),
-  session: { strategy: 'jwt' }, // Switch to JWT
+  session: { strategy: 'jwt' },
   debug: true,
   providers: [
     Google({
@@ -46,10 +39,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
 
         if (!user || !user.password) {
-          console.log(
-            'Authorize: No user or password found for',
-            credentials.email
-          );
           return null;
         }
 
@@ -58,15 +47,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           user.password
         );
         if (!isValid) {
-          console.log('Authorize: Invalid password for', credentials.email);
           return null;
         }
 
-        console.log('Authorize: User authenticated', {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        });
         return { id: user.id, email: user.email, name: user.name };
       },
     }),
@@ -83,7 +66,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             html: `<p>Click <a href="${url}">here</a> to login. This link expires in 24 hours.</p>`,
           });
         } catch (error) {
-          console.error('Failed to send magic link email:', error);
+          console.error(error);
           throw new Error('Unable to send verification email');
         }
       },
@@ -92,13 +75,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id; // Add user ID to token on sign-in
+        token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
-      console.log('Session callback triggered', { session, token });
-      session.user.id = token.id as string; // Pass ID from token to session
+      session.user.id = token.id as string;
       return session;
     },
   },
